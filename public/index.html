@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskGravity — Practical 07: Full-Stack Node.js &amp; MongoDB App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header>
+    <div class="container header-row">
+      <a href="#" class="brand">
+        <span class="brand-mark">TG</span>
+        <span>TaskGravity</span>
+      </a>
+      <div style="font-size: 0.8rem; color: #64748b;">
+        Practical 07 &bull; Full-Stack MongoDB &amp; Mongoose Application
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Live Database Indicator -->
+    <div class="db-status-banner">
+      <div id="dbStatusIndicator">
+        <span class="db-indicator db-disconnected" id="dbDot"></span>
+        <span id="dbStatusText">Checking MongoDB connection...</span>
+      </div>
+      <div style="font-size: 0.75rem; color: #64748b;" id="dbUriText"></div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-title">MongoDB Documents</div>
+        <div class="stat-val" id="statTotal">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">In Progress</div>
+        <div class="stat-val" id="statInProgress" style="color: #1d4ed8;">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Pending</div>
+        <div class="stat-val" id="statPending" style="color: #92400e;">-</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-title">Sprint Velocity</div>
+        <div class="stat-val" id="statVelocity" style="color: #047857;">-%</div>
+      </div>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="main-layout">
+      <!-- Left: Create Task Panel -->
+      <aside class="panel">
+        <h2 class="panel-title">Add Work Item (MongoDB Collection)</h2>
+        <p class="panel-sub">Payload is validated by Mongoose Schema constraints.</p>
+
+        <form id="mongoTaskForm" novalidate>
+          <div class="form-group">
+            <label class="form-label">Task Title *</label>
+            <input type="text" id="taskTitle" class="form-control" placeholder="e.g. MongoDB Connection Pooling" required>
+            <div class="field-error" id="err_title"></div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+            <div class="form-group">
+              <label class="form-label">Category *</label>
+              <select id="taskCategory" class="form-control">
+                <option value="Frontend">Frontend</option>
+                <option value="Backend">Backend</option>
+                <option value="Database" selected>Database</option>
+                <option value="DevOps">DevOps</option>
+                <option value="Testing">Testing</option>
+                <option value="UI/UX">UI/UX</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Priority *</label>
+              <select id="taskPriority" class="form-control">
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High" selected>High</option>
+                <option value="Urgent">Urgent</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+            <div class="form-group">
+              <label class="form-label">Deadline *</label>
+              <input type="date" id="taskDueDate" class="form-control">
+              <div class="field-error" id="err_dueDate"></div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Effort (Hours) *</label>
+              <input type="number" id="taskHours" class="form-control" placeholder="4" min="0.5" max="100" step="0.5">
+              <div class="field-error" id="err_estimatedHours"></div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea id="taskDesc" class="form-control" rows="3" placeholder="NoSQL model scope, indexing, and TTL..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Save to MongoDB</button>
+        </form>
+      </aside>
+
+      <!-- Right: MongoDB Collection Documents -->
+      <section>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h2 style="font-size: 1.1rem; font-weight: 700;">Task Documents (NoSQL Collection)</h2>
+          <div style="display: flex; gap: 6px;">
+            <button class="btn btn-secondary btn-sm" onclick="fetchTasks()">
+              Sync Database
+            </button>
+          </div>
+        </div>
+
+        <div id="taskList"></div>
+      </section>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container" style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+      <div>
+        <strong>TaskGravity</strong> &bull; Practical 07 Full-Stack Application | Student: <strong>Sarthak Bhosale</strong> (PRN: 202401100051)
+      </div>
+      <div>Department of Computer Engineering (Software Engineering)</div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

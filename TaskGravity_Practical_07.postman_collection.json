@@ -1,0 +1,128 @@
+{
+  "info": {
+    "_postman_id": "b7194821-2041-4732-bc91-a8310928a301",
+    "name": "TaskGravity Full-Stack MongoDB API - Practical 07",
+    "description": "Postman test suite for Practical 07 verifying MongoDB Atlas/Mongoose NoSQL operations.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5000", "type": "string" },
+    { "key": "mongoDocId", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "1. GET Database Connectivity Status",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200 OK', function () { pm.response.to.have.status(200); });",
+              "pm.test('Database status reported', function () {",
+              "    var data = pm.response.json();",
+              "    pm.expect(data.status).to.have.property('connected');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/api/db-status", "host": ["{{base_url}}"], "path": ["api", "db-status"] }
+      }
+    },
+    {
+      "name": "2. POST Create MongoDB Task Document",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 201 Created', function () { pm.response.to.have.status(201); });",
+              "pm.test('Document assigned MongoDB _id', function () {",
+              "    var data = pm.response.json();",
+              "    pm.expect(data.data._id).to.be.a('string');",
+              "    pm.collectionVariables.set('mongoDocId', data.data._id);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Production Atlas Replica Setup\",\n  \"category\": \"Database\",\n  \"priority\": \"Urgent\",\n  \"dueDate\": \"2026-11-28\",\n  \"estimatedHours\": 5,\n  \"description\": \"Configure TLS certificate validation and Mongoose schemas.\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/api/tasks", "host": ["{{base_url}}"], "path": ["api", "tasks"] }
+      }
+    },
+    {
+      "name": "3. GET All Tasks from MongoDB",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200 OK', function () { pm.response.to.have.status(200); });",
+              "pm.test('Returns array of MongoDB documents', function () {",
+              "    var data = pm.response.json();",
+              "    pm.expect(data.data).to.be.an('array');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{base_url}}/api/tasks", "host": ["{{base_url}}"], "path": ["api", "tasks"] }
+      }
+    },
+    {
+      "name": "4. PATCH Update Document Status in MongoDB",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200 OK', function () { pm.response.to.have.status(200); });",
+              "pm.test('Status updated to in-progress', function () {",
+              "    var data = pm.response.json();",
+              "    pm.expect(data.data.status).to.eql('in-progress');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"status\": \"in-progress\"\n}" },
+        "url": { "raw": "{{base_url}}/api/tasks/{{mongoDocId}}/status", "host": ["{{base_url}}"], "path": ["api", "tasks", "{{mongoDocId}}", "status"] }
+      }
+    },
+    {
+      "name": "5. DELETE Document from MongoDB",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200 OK', function () { pm.response.to.have.status(200); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "url": { "raw": "{{base_url}}/api/tasks/{{mongoDocId}}", "host": ["{{base_url}}"], "path": ["api", "tasks", "{{mongoDocId}}"] }
+      }
+    }
+  ]
+}
